@@ -14,6 +14,6 @@
   :jvm-opts ["-XX:-OmitStackTraceInFastThrow" "-Xss500m"]
   :dependencies [[org.clojure/clojure "1.9.0"]
                  #_[org.clojure/clojure "1.8.0"] 
-		 [zprint "0.4.10"]
+		 [zprint "0.4.9"]
                  #_[clojure-future-spec "1.9.0-alpha17"] 
 		 [robert/hooke "1.3.0"]])
