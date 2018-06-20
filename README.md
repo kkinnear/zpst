@@ -188,3 +188,10 @@ See [documentation for epst](doc/epst.md "")
   * [epst](doc/epst.md# "")
   * [options](doc/options.md "")
 
+## License
+
+Copyright © 2018 Kim Kinnear
+
+Distributed under the MIT License.  See the file LICENSE for details.
+
+
