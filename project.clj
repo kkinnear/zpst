@@ -1,5 +1,5 @@
 ;!zprint {:vector {:wrap? false}}
-(defproject zpst "0.1.4"
+(defproject zpst "0.1.5"
   :description "Output useful information from stack backtraces."
   :url "https://github.com/kkinnear/zpst"
   :license {:name "MIT License",

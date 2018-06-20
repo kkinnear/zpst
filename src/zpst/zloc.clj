@@ -74,10 +74,11 @@
   and also tries to remove the namespace if it appears."
   [fn1 fn2]
   #_(println "fn1:" fn1 "fn2" fn2)
-  ; Maybe add (and fn1 fn2 (or ...))
-  (or (= fn1 fn2)
-      (= (last (clojure.string/split fn1 #"/"))
-         (last (clojure.string/split fn2 #"/")))))
+  (and fn1
+       fn2
+       (or (= fn1 fn2)
+           (= (last (clojure.string/split fn1 #"/"))
+              (last (clojure.string/split fn2 #"/"))))))
 
 (defn find-fn
   "Given a fn-name and a line number in that function, find

@@ -96,7 +96,7 @@
                       ::zprint-source ::docstring? ::call? ::args? ::color?
                       ::params? ::name? ::stack?]))
 (s/def ::zpst
-  (only-keys :opt-un [::show ::depth ::fns? ::zdb? ::arg-clean-fn
+  (only-keys :opt-un [::show ::depth ::dbg? ::fns? ::zdb? ::arg-clean-fn
                       ::arg-vec-options-fn ::zprint-args ::zprint-source
                       ::docstring? ::call? ::color? ::args? ::params? ::name?
                       ::stack?]))

@@ -332,6 +332,10 @@ For example, here is a sample `arg-clean-fn`:
         (= (:as local) 'options) (str "<options-map>")
         :else value))
 ```
+This capability was added before zprint was enhanced with `:max-length`
+that takes a vector of lengths, based on the depth.  It isn't nearly as
+important now that zprint will give a reasonable overview of a structure
+with the `:max-length` feature, but in some cases it may still be useful.
 
 #### :arg-vec-options <text style="color:#A4A4A4;"><small>see below</small></text>
 
@@ -340,7 +344,7 @@ but you want to influence the options map that is used by `zprint` when
 formatting output for the argument binding vector.  In this case, you can 
 supply a function which will be called with the entire argument binding
 vector, and you can have this function craft a reasonable `zprint` options
-map.  Here is a function which simply return the standard `zprint` options
+map.  Here is a function which simply returns the standard `zprint` options
 for printing the binding vector:
 
 ```clojure

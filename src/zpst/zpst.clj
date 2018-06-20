@@ -125,7 +125,8 @@
   "Actually do zpst functions. Arguments are e and options. The exception in
   e-in could have ex-data, or not."
   [e-in options]
-  (let [e-data (concat-causes e-in)
+  (let [dbg? (:dbg? options)
+        e-data (concat-causes e-in)
         zcalls (:zcall-vec e-data)
         st (:stacktrace-array e-data)
         ex-str-vec (:exception-str-vec e-data)
@@ -134,10 +135,10 @@
         st-lite (if zcalls (clean-hooks st-lite) st-lite)
         _ (def zstl st-lite)
         options (add-option-set options)]
-    #_(println "type e-in:" (type e-in)
+    (when dbg?
+      (println "type e-in:" (type e-in)
                "\ntype options:" (type options)
-               "\noptions:\n" (czprint-str options))
-    #_(println "\n")
+               "\noptions:\n\n" (czprint-str options)))
     (loop [st-list st-lite
            zcall-vec zcalls
            last-class-fn-name nil
@@ -155,7 +156,7 @@
         (let [el (first st-list)
               file (.getFileName el)
               class-name (.getClassName el)
-              #_(println "File:" file "Classname:" class-name)
+              _ (when dbg? (println "File:" file "Classname:" class-name))
               fn-name (.getMethodName el)
               lineno (.getLineNumber el)
               stack-str (stack-element-str el)
@@ -172,57 +173,60 @@
               ; If we have list of arguments, get this functions args
               ; This only does something if we hooked the functions first
               zcall (if look-for-fn? (find-zcall class-fn-name zcall-vec))
-              #_(if class-fn-name
-                  (println "class-fn-name:" class-fn-name)
-                  (println file fn-name class-fn-name lineno))
+              _ (when dbg?
+                  (if class-fn-name
+                    (println "class-fn-name:" class-fn-name)
+                    (println file fn-name class-fn-name lineno)))
               ; is this the same one as the last one but just the
               ; line numbers are different?
-              #_(println "fn-db:" (count fn-db) (map :fn-name fn-db))
+              _ (when dbg?
+                  (println "fn-db:" (count fn-db) (map :fn-name fn-db)))
               print? (and (not (or (:zdb? options)
                                    (:fns? options)
                                    (:fn-num options)))
                           ; Fix this so that it is our frames
                           #_(<= depth (:depth options))
                           (<= (count fn-db) (:depth options)))
-              #_(println "print?" print?)
-              frame-map (when look-for-fn?
-                          #_(println "Look on line" (- last-lineno lineno))
-                          (let [source-str (source-fn (symbol class-fn-name))]
-                            (when source-str
-                              ;(czprint source {:parse-string? true})
-                              #_(println "----> found:" class-fn-name)
-                              ; Parse the source, and using the resulting zipper
-                              ; figure out the call site in the source.
-                              (let [[zloc zloc-root]
-                                      (find-fn source-str
+              _ (when dbg? (println "print?" print?))
+              frame-map
+                (when look-for-fn?
+                  (when dbg? (println "Look on line" (- last-lineno lineno)))
+                  (let [source-str (source-fn (symbol class-fn-name))]
+                    (when source-str
+                      ;(czprint source {:parse-string? true})
+                      (when dbg? (println "----> found:" class-fn-name))
+                      ; Parse the source, and using the resulting zipper
+                      ; figure out the call site in the source.
+                      (let [[zloc zloc-root] (find-fn
+                                               source-str
                                                class-fn-name
                                                (- last-lineno lineno)
                                                before-last-class-fn-name)]
-                                #_(println "zloc:" (zprint.zutil/string zloc))
-                                (when zloc
-                                  ; We found the function and have its zipper
-                                  (let [frame-map (when zloc
-                                                    ;(and e-info zloc)
-                                                    (get-frame-map options
-                                                                   zloc
-                                                                   zloc-root
-                                                                   zcall))
-                                        ; build description of this call
-                                        frame-map (assoc frame-map
-                                                    :fn-name class-fn-name
-                                                    :stack-str stack-str
-                                                    :index (count fn-db))]
-                                    (when print?
-                                      (print-frame options
-                                                   (count fn-db)
-                                                   (:fn-name frame-map)
-                                                   zloc
-                                                   (:param-path frame-map)
-                                                   (:params frame-map)
-                                                   (:args frame-map)))
-                                    (if (= (:fn-num options) (count fn-db))
-                                      (assoc frame-map :fn-num-return? true)
-                                      frame-map)))))))]
+                        (when dbg? (println "zloc:" (zprint.zutil/string zloc)))
+                        (when zloc
+                          ; We found the function and have its zipper
+                          (let [frame-map (when zloc
+                                            ;(and e-info zloc)
+                                            (get-frame-map options
+                                                           zloc
+                                                           zloc-root
+                                                           zcall))
+                                ; build description of this call
+                                frame-map (assoc frame-map
+                                            :fn-name class-fn-name
+                                            :stack-str stack-str
+                                            :index (count fn-db))]
+                            (when print?
+                              (print-frame options
+                                           (count fn-db)
+                                           (:fn-name frame-map)
+                                           zloc
+                                           (:param-path frame-map)
+                                           (:params frame-map)
+                                           (:args frame-map)))
+                            (if (= (:fn-num options) (count fn-db))
+                              (assoc frame-map :fn-num-return? true)
+                              frame-map)))))))]
           ; Print regular stack frame
           ;(when print? (println (str \tab (stack-element-str el))))
           ;(println "clean-args length:" (count (:clean-args frame-map)))
@@ -231,8 +235,10 @@
             frame-map
             (recur (next st-list)
                    (if zcall (next zcall-vec) zcall-vec)
+                   ; last-class-fn-name
                    (or class-fn-name fn-name)
                    lineno
+                   ; before-last-class-fn-name
                    last-class-fn-name
                    (or skip?
                        ;(println "class-name:" class-name)
