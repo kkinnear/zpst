@@ -1,6 +1,6 @@
 # zpst
 
-__zpst__ is a library to assit debugging of exceptions encountered
+__zpst__ is a library to assist debugging of exceptions encountered
 at the repl.  It will
 
   * show source code in stack backtraces
@@ -110,7 +110,7 @@ with no additional preparation, there is more you can do.
 ### Access the arguments in the backtrace, and re-try the call
 
 The data gathered by the `(collect)` and `(analyze)` calls can
-be accessed directly, changed, and you can re-evaluate the from anywhere
+be accessed directly, changed, and you can re-evaluate from anywhere
 in the stack.
 
 Here is an example of what you can do:
