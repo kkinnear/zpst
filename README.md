@@ -5,8 +5,8 @@ at the repl.  It will
 
   * show source code in stack backtraces
   * allow examination of arguments within stack backtraces
-  * let you change the arguments and recreate the conditions that caused the
-  exception
+  * let you change the arguments and retry function calls from anywhere on
+  the stack
 
 zpst will make all of this possible with no changes to your source
 code.  You do have to set a JVM switch to keep the exceptions coming,
