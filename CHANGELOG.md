@@ -1,6 +1,12 @@
 # Change Log
 All notable changes to this project will be documented in this file. 
 
+## 0.1.6 - 2018-6-19
+
+### Fixed
+
+ * Remove debugging code from .jar file.
+
 ## 0.1.5 - 2018-6-19
 
 ### Changed

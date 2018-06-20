@@ -1,5 +1,5 @@
 ;!zprint {:vector {:wrap? false}}
-(defproject zpst "0.1.5"
+(defproject zpst "0.1.6"
   :description "Output useful information from stack backtraces."
   :url "https://github.com/kkinnear/zpst"
   :license {:name "MIT License",
@@ -10,7 +10,7 @@
   :profiles {:dev {:dependencies [[expectations "2.2.0-rc1"]
                                   [com.taoensso/tufte "1.1.1"]]}}
   :zprint {:old? false}
-  :jar-exclusions [#"\.(java|cljs|txt)"]
+  :jar-exclusions [#"\.(java|cljs|txt)|repl\.clj"]
   :jvm-opts ["-XX:-OmitStackTraceInFastThrow" "-Xss500m"]
   :dependencies [[org.clojure/clojure "1.9.0"]
                  #_[org.clojure/clojure "1.8.0"] 
